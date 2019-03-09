@@ -1,26 +1,31 @@
+package game.player;
+
+import game.Vector2D;
 import tklibs.SpriteUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Vector;
 
-
-public class PlayerBullet {
-    BufferedImage image;
+public class PlayerUlti{
+    BufferedImage R;
     Vector2D position;
     Vector2D velocity;
 
-    public PlayerBullet(){
-        image = SpriteUtils.loadImage("assets/images/player-bullets/a/0.png");
+    public PlayerUlti() {
+        R = SpriteUtils.loadImage("assets/images/sphere/1.png");
         position = new Vector2D();
-        velocity = new Vector2D(0, -5);
+        velocity = new Vector2D(1, -5);
     }
-    public void render(Graphics g){
-        g.drawImage(image,(int)position.x,(int) position.y,null);
+
+    public void render(Graphics g) {
+        g.drawImage(R, (int) position.x, (int) position.y, null);
     }
+
     public void run(){
-        position.add(velocity.x,velocity.y);
+        position.add(velocity.x, velocity.y);
+        changeDirection();
     }
+
     private void changeDirection() {
         if (position.x > 384 - 28 && velocity.x > 0) {
             velocity.set(-velocity.x, velocity.y);
@@ -29,5 +34,4 @@ public class PlayerBullet {
             velocity.set(-velocity.x, velocity.y);
         }
     }
-
 }

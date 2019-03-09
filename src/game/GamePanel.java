@@ -1,20 +1,12 @@
-import tklibs.SpriteUtils;
+package game;
+
+import game.enemy.Enemy;
+import game.player.Player;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
-
-import tklibs.SpriteUtils;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Vector;
 
 public class GamePanel extends JPanel {
     Player player;
@@ -22,29 +14,9 @@ public class GamePanel extends JPanel {
     ArrayList<Enemy> enemies;
 
     public GamePanel() {
-        // backgroundCreate
-        background = new Background();
-
-        // playerCreate
         player = new Player();
-
-        // enemyCreate
-        enemies = new ArrayList<Enemy>();
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        //backgroundDraw
-        background.render(g);
-
-        //playerDraw
-        player.render(g);
-
-        //enemyDraw
-        for (int i = 0; i < enemies.size(); i++) {
-            Enemy enemy = enemies.get(i);
-            enemy.render(g);
-        }
+        background = new Background();
+        enemies = new ArrayList<>();
     }
 
     public void gameLoop() {
@@ -61,7 +33,17 @@ public class GamePanel extends JPanel {
     }
 
     private void renderAll() {
-        repaint(); // goi lai ham paint
+        repaint(); // goi lai ham paint()
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        background.render(g);
+        player.render(g);
+        for (int i = 0; i < enemies.size(); i++) {
+            Enemy enemy = enemies.get(i);
+            enemy.render(g);
+        }
     }
 
     private void runAll() {
@@ -78,9 +60,7 @@ public class GamePanel extends JPanel {
         }
     }
 
-
     // TODO: remove summonCount
-
     int summonCount;
     int wayCount;
     int enemyCount;
@@ -92,7 +72,7 @@ public class GamePanel extends JPanel {
             summonCount++;
             if(summonCount > 15) {
                 Enemy enemy = new Enemy();
-                enemy.postion.set(enemyX, -100);
+                enemy.position.set(enemyX, -100);
                 enemy.velocity.setAngle(Math.PI / 9);
                 enemies.add(enemy);
                 enemyCount++;

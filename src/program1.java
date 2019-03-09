@@ -1,6 +1,8 @@
+import game.GamePanel;
+import game.GameWindow;
+
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class program1 {
     public static void main(String[] args) {
@@ -26,14 +28,14 @@ public class program1 {
         //strings.add(): // them phan tu vao mang
         //strings.get(): //lay ra phan tu o index truyen vao
         //strings.size(: // lay ra kick thuoc mang
-//        ArrayList<Vector2D> vectors = new ArrayList<>();
-//        vectors.add(new Vector2D(1,1));
-//        vectors.add(new Vector2D(3,7));
-//        vectors.add(new Vector2D(3,1));
-//        Vector2D maxLengthVector = null;
+//        ArrayList<game.Vector2D> vectors = new ArrayList<>();
+//        vectors.add(new game.Vector2D(1,1));
+//        vectors.add(new game.Vector2D(3,7));
+//        vectors.add(new game.Vector2D(3,1));
+//        game.Vector2D maxLengthVector = null;
 //        double maxLength= 0;
 //        for (int i = 0; i< vectors.size(); i++){
-//            Vector2D vector = vectors.get(i);
+//            game.Vector2D vector = vectors.get(i);
 //            if(vector.getLength() > maxLength){
 //                maxLengthVector = vector;
 //                maxLength = vector.getLength();
