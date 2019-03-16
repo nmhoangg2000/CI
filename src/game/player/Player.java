@@ -1,30 +1,37 @@
 package game.player;
 
-
 import game.GameObject;
 import game.GameWindow;
 import game.Setting;
+import game.physics.BoxCollider;
+import game.Renderer;
 import tklibs.SpriteUtils;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Player extends GameObject {
-    ArrayList<PlayerBullet> bullets;
+    int hp;
 
     public Player() {
-        image = SpriteUtils.loadImage("assets/images/players/straight/0.png");
+        renderer = new Renderer("assets/images/players/straight");
+        hitBox = new BoxCollider(this, 32, 48);
         position.set(300, 500);
-        bullets = new ArrayList<>();
+        hp = 10;
+
     }
 
+    static Font font = new Font("Verdana"
+            , Font.BOLD, 32);
     @Override
     public void render(Graphics g) {
         super.render(g);
-        for (int i = 0; i < bullets.size(); i++) {
-            PlayerBullet bullet = bullets.get(i);
-            bullet.render(g);
-        }
+        g.setFont(font);
+        g.setColor(Color.GREEN);
+        g.drawString(hp + ""
+                , (int) position.x
+                , (int) position.y);
     }
 
     @Override
@@ -33,7 +40,6 @@ public class Player extends GameObject {
         move();
         limit();
         fire();
-        bulletsRun();
     }
 
     // TODO: remove fireCount
@@ -41,32 +47,32 @@ public class Player extends GameObject {
     private void fire() {
         fireCount++;
         if(GameWindow.isFirePress && fireCount > 20) {
-            for (int i = 0; i < 20; i++) {
-                PlayerBullet bullet = new PlayerBullet();
+            for (int i = 0; i < 6; i++) {
+                PlayerBullet bullet = GameObject.recycle(PlayerBullet.class);
                 bullet.position.set(position.x, position.y);
-                bullets.add(bullet);
+                bullet.velocity.setAngle(-Math.PI / 3 - i * (Math.PI / 15));
             }
             fireCount = 0;
         }
     }
 
     private void limit() {
-        if(position.x < 0) {
-            position.set(0, position.y);
+        if(position.x < Setting.PLAYER_WIDTH / 2) {
+            position.set(Setting.PLAYER_WIDTH / 2, position.y);
         }
-        if(position.x > Setting.BACKGROUND_WIDTH - image.getWidth()) {
+        if(position.x > Setting.BACKGROUND_WIDTH - (Setting.PLAYER_WIDTH / 2)) {
             position.set(
-                    Setting.BACKGROUND_WIDTH - image.getWidth(),
+                    Setting.BACKGROUND_WIDTH - (Setting.PLAYER_WIDTH / 2),
                     position.y
             );
         }
-        if(position.y < 0) {
-            position.set(position.x, 0);
+        if(position.y < Setting.PLAYER_HEIGHT / 2) {
+            position.set(position.x, Setting.PLAYER_HEIGHT / 2);
         }
-        if(position.y > Setting.GAME_HEIGHT - image.getHeight()) {
+        if(position.y > Setting.GAME_HEIGHT - (Setting.PLAYER_HEIGHT / 2) ) {
             position.set(
                     position.x,
-                    Setting.GAME_HEIGHT - image.getHeight()
+                    Setting.GAME_HEIGHT - (Setting.PLAYER_HEIGHT / 2)
             );
         }
     }
@@ -91,10 +97,11 @@ public class Player extends GameObject {
         velocity.setLength(playerSpeed);
     }
 
-    private void bulletsRun() {
-        for (int i = 0; i < bullets.size(); i++) {
-            PlayerBullet bullet = bullets.get(i);
-            bullet.run();
+    public void takeDamage(int damage) {
+        hp -= damage;
+        if(hp <= 0) {
+            hp = 0;
+            this.deactive();
         }
     }
 }

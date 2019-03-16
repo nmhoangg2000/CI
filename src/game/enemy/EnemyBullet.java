@@ -1,31 +1,43 @@
 package game.enemy;
 
-import game.Setting;
 import game.GameObject;
-import game.Vector2D;
+import game.Setting;
+import game.physics.BoxCollider;
 import game.player.Player;
+import game.Renderer;
 import tklibs.SpriteUtils;
 
-public class EnemyBullet extends GameObject {
-    int count;
+import java.awt.image.BufferedImage;
 
+public class EnemyBullet extends GameObject {
+    int damage;
     public EnemyBullet() {
-        image = SpriteUtils.loadImage("assets/images/enemies/bullets/blue.png");
-        velocity.set(0, 3);
+        BufferedImage image = SpriteUtils.loadImage("assets/images/enemies/bullets/green.png");
+        hitBox = new BoxCollider(this, 16, 16);
+        renderer = new Renderer(image);
+        velocity.set(0, 5);
+        damage = 1;
     }
 
     @Override
     public void run() {
         super.run();
-        count++;
-        if (count > 150) {
-            Player clone = GameObject.find(Player.class);
-            if (clone != null) {
-                Vector2D bulletToPlayer = clone.position.clone();
-                bulletToPlayer.substract(this.position);
-                bulletToPlayer.setLength(3);
-                this.velocity.set(bulletToPlayer);
-            }
+        deactiveIfNeeded();
+        checkIntersects();
+    }
+
+    private void checkIntersects() {
+        Player player = GameObject.findIntersects(Player.class
+                , this);
+        if(player != null) {
+            this.deactive();
+            player.takeDamage(damage);
+        }
+    }
+
+    private void deactiveIfNeeded() {
+        if(this.position.y > Setting.GAME_HEIGHT + 50) {
+            this.deactive();
         }
     }
 }
